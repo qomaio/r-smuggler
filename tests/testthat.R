@@ -1,4 +1,4 @@
 library(testthat)
-library(qomautilr)
+library(qoma.smuggler)
 
-test_check("qomautilr")
+test_check("qoma.smuggler")
