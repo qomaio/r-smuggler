@@ -1,0 +1,46 @@
+---
+title: "Access FAME 4GL from R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment='')
+```
+
+The FAME HLI has an easy command for sending instructions to a FAME 4GL session, `cfmfame()`. 
+To access this function, we include the _rhli_ package.  
+```{r}
+library(qoma.smuggler)
+library(rhli)
+
+if(!open_hli())knitr::knit_exit()
+```
+We use FAME 4GL to generate uniform random numbers for a specified date range --- 
+the most business days of the prior quarter. 
+
+We demonstrate FAME timescale conversion and reporting.
+```{r}
+cmd <- Character(paste(
+  "date thisday(q)-1; ",
+  "freq b; ",
+  "open<acc over>tmp; ",
+  "series x : precision by date; ",
+  "desc(x) = \"U[0,1]\"; ",
+  "docu(x) = \"Uniformly distributed U[0,1] time-series.\"; ",
+  "set x = uniform(date); ",
+  "output<acc over>tmp.txt; ",
+  "whats x; ",
+  "show vert; length full; conv on;",
+  "freq b; title text \"Frequency \"+@freq; repo x; ",
+  "freq w(fri); title text \"Frequency \"+@freq; repo x; ",
+  "freq m; title text \"Frequency \"+@freq; repo x; ",
+  "freq q; title text \"Frequency \"+@freq; repo x; ",
+  "output terminal; ",
+  "close tmp",  sep=""))
+cfmfame(Integer(-1), cmd)
+cat(readLines("tmp.txt"), sep = '\n')
+```
+When finished accessing FAME, 
+```{r}
+close_hli()
+```

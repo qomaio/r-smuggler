@@ -1,0 +1,16 @@
+Package: qoma.smuggler
+Title: Utilities for the FAME HLI
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Kevin", "Keane", email = "krkeane@qoma.io", role = c("aut", "cre")),
+    person("Qoma", "LLC", email = "info@qoma.io", role = "cph"))
+Description: Provides utilities to move data in and out of FAME.
+Depends: R (>= 3.5), rhli (>= 0.0.2)
+License: AGPL
+Encoding: UTF-8
+LazyData: true
+Suggests: testthat
+Imports: rhli,
+    lubridate,
+    tibble
+RoxygenNote: 6.1.0

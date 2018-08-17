@@ -1,0 +1,57 @@
+---
+title: "Hello Qoma Smuggler!"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment='')
+```
+
+The R package _qoma.smuggler_  provides high-level access to the FAME HLI.  To open the FAME HLI,
+```{r}
+library(ggplot2)
+library(qoma.smuggler)
+
+if(!open_hli())knitr::knit_exit()
+```
+To move FAME data across the border to R, provide a database name:
+```{r}
+dbname <- paste(Sys.getenv("FAME"),"util","driecon.db",sep="/")
+cat(dbname)
+```
+Read the database into a _qoma.smuggler_ `List`:
+```{r}
+famedata <- read_fame(dbname)
+```
+To display all the contents as a catalog, 
+```{r}
+print_catalog(famedata,list.len=3)
+```
+You may display individual object's meta data from a _qoma.smuggler_ `List`. 
+```{r}
+cat(famedata$get_meta('GDP'))
+```
+FAME series are accessible as a `tibble` structure with dates expressed as _lubridate_ package structures `Date`:
+```{r}
+tbl<-famedata$get_data('GDP')
+str(tbl)
+```
+The _tibble_ package is part of the _tidyverse_ ecosystem and works well with packages such as _ggplot_.
+```{r}
+theme_set(theme_minimal())
+ggplot(data = tbl, aes(x = date, y = GDP))+
+  geom_line(color = "#00AFBB", size = 2)
+```
+
+To move R data across the border to FAME,
+```{r}
+write_fame("mycopy.db",famedata)
+```
+
+When you complete your work, close the FAME HLI to avoid data loss,
+```{r}
+close_hli()
+file.remove("mycopy.db")
+```

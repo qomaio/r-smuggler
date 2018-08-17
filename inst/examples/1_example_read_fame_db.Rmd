@@ -1,0 +1,79 @@
+---
+title: "Read FAME databases from R"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment='')
+```
+
+FAME databases map names to data structures.  FAME data types include:
+
+BOOLEAN 
+DATE (at various frequencies)
+NUMERIC
+PRECISION
+STRING
+
+The _rhli_ package maps FAME data types to compatible basic R data types. 
+The _qoma.smuggler_ package constructs more complex _tidyverse_ data structures such as `Date` and `tibble`. _qoma.smuggler_ defines an R reference class `List` which implements a mutable `list` to hold FAME data.
+
+The utility function `open_hli()` opens the FAME environment and prints diagnostic information.
+```{r}
+library(qoma.smuggler)
+library(rhli)
+
+if(!open_hli())knitr::knit_exit()
+```
+
+The FAME distribution includes a number of sample databases.  We will use the DRI Economics _driecon_ sample database for this notebook.
+```{r}
+dbname <- paste(Sys.getenv("FAME"),"util","driecon",sep="/")
+cat(dbname)
+```
+
+The _qoma.smuggler_ function `read_fame()` reads FAME data objects into a _qoma.smuggler_ `List`.
+By default, the function `read_fame()` loads the entire specified database to a  _qoma.smuggler_ `List`.
+```{r}
+famedata <- read_fame(dbname)
+```
+The method `get_data(objectName)` returns FAME data for objectName from the _qoma.smuggler_ `List`.
+    For FAME SCALAR objects, `get_data(objectName)` returns one value. 
+    For FAME SERIES objects, `get_data(objectName)` returns a `tibble` with multiple values.
+```{r}    
+famedata$get_data('GDP')
+```
+The method `get_meta(objectName)` returns FAME object meta data as a string from a  _qoma.smuggler_ `List`.
+
+```{r}
+cat(famedata$get_meta('GDP'))
+```
+Specifying a wildcard pattern will select a subset of the data objects with a compatible pattern.  You may  
+specify an full name, retrieving one series.
+```{r}
+wilnam <- "ip?"
+famedata <- read_fame(dbname,wilnam)
+```
+The function `print_catalog()` will display summary meta data for the contents retrieved. For brevity, 
+we specify optional parameter `list.len = 3` to limit output.
+```{r}
+print_catalog(famedata,list.len = 3)
+```
+Specifying a date range will select a subset of the database with specified frequency.  Here we use the FAME HLI
+constant `HANDEC` which means _ANNUAL(DECEMBER)_ frequency. See the FAME support website CHLI documentation for available codes.
+Data returned will be limited to the specified date range.
+```{r}
+range <- to_fame_range(HANDEC,"1993","2002")
+famedata <- read_fame(dbname,fame_range_ = range)
+print_catalog(famedata,list.len = 2)
+```
+Note the data retrieved is for the specified date range only; not an objects full date range:
+```{r}
+famedata$get_data('GDP')
+```
+The _qoma.smuggler_ utility function `close_hli()` closes the FAME environment.
+```{r}
+close_hli()
+```

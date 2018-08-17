@@ -1,0 +1,56 @@
+---
+title: "Write FAME databases from R"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment='')
+```
+
+To use FAME HLI functions, include the package _rhli_.  We will use `cfmfame()` to execute some FAME 4GL
+for the purposes of inspecting our FAME database writing skills.
+
+```{r}
+library(qoma.smuggler)
+library(rhli)
+
+if(!open_hli())knitr::knit_exit()
+```
+
+```{r}
+dbname <- paste(Sys.getenv("FAME"),"util","driecon",sep="/")
+cat(dbname)
+```
+
+```{r}
+famedata <- read_fame(dbname)
+```
+
+```{r}
+write_fame("mycopy",famedata)
+```
+
+Use 4GL to peek at data in FAME. Output here is a bit verbose.  Note that after FAME catalogs the database,
+we loop through the objects and write the object documentation.
+```{r}
+cmd <- rhli::Character(paste(
+  "open<acc read>mycopy;",  
+  "output<acc over>tmp.txt;",
+  "cata mycopy;", 
+  "-/xl = wildlist(mycopy,\"?\");",
+  "loop for x in xl; type name(x); type docu(x)+newline;end;",
+  "output terminal;",
+  "close mycopy;",
+  sep=""))
+rhli::cfmfame(rhli::Integer(-1), cmd)
+cat(readLines("tmp.txt"), sep = '\n')
+```
+
+
+```{r}
+close_hli()
+file.remove("tmp.txt")
+file.remove("mycopy.db")
+```
