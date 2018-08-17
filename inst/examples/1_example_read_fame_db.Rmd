@@ -1,8 +1,8 @@
 ---
 title: "Read FAME databases from R"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,11 +11,11 @@ knitr::opts_chunk$set(echo = TRUE,comment='')
 
 FAME databases map names to data structures.  FAME data types include:
 
-BOOLEAN 
-DATE (at various frequencies)
-NUMERIC
-PRECISION
-STRING
+* BOOLEAN 
+* DATE (at various frequencies)
+* NUMERIC
+* PRECISION
+* STRING
 
 The _rhli_ package maps FAME data types to compatible basic R data types. 
 The _qoma.smuggler_ package constructs more complex _tidyverse_ data structures such as `Date` and `tibble`. _qoma.smuggler_ defines an R reference class `List` which implements a mutable `list` to hold FAME data.
