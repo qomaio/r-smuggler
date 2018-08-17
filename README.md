@@ -25,7 +25,7 @@ From an R console inside R Studio,
 * `file.edit(file.path(find.package("qoma.smuggler"),"examples/4_example_write_fame_db.Rmd"))`
 * `file.edit(file.path(find.package("qoma.smuggler"),"examples/5_sample_smuggler.Rmd"))`
     * from the editor, hit the `Knitr` button to render the R Markdown example
-    * PDF output is available [here](inst\examples)
+    * PDF output is available [here](inst/examples)
 
 On first use, you will be directed to a website to obtain a `QOMA_PIN` which will entitle you to use the RHLI for the duration of your FAME license.
 
