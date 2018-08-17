@@ -20,7 +20,7 @@ close_hli <- function() {
 
 #' convert a fame type code to a string
 #'
-#' @param type_code_
+#' @param type_code_ FAME HLI type code
 #'
 #' @return type string
 type_to_string <- function(type_code_) {
@@ -89,9 +89,9 @@ print_catalog <- function(famedata, list.len = -1) {
 
 #' Construct a date range
 #'
-#' @param freq FAME HLI frequency constant
-#' @param start_str start date literal
-#' @param end_str  end date literal
+#' @param freq_ FAME frequency HLI code
+#' @param start_str_ FAME start date literal (e.g. "2018M12")
+#' @param end_str_  FAME end date literal
 #'
 #' @return date range
 #' @export
@@ -114,7 +114,7 @@ to_fame_range <- function(freq_, start_str_, end_str_) {
 
 #' get a meta data string for an object
 #'
-#' @param famedata a list containing fame database objects
+#' @param fameinfo a list containing fame object meta data
 #' @param objnam object name
 #'
 #' @return string containing meta data
@@ -196,6 +196,7 @@ meta_to_string <- function(fameinfo, objnam) {
 
 #' Display version information
 #'
+#' @importFrom utils packageVersion
 print_stack <- function() {
   status <- rhli::Integer(-1)
   ver <- rhli::Numeric(-1)
@@ -227,6 +228,10 @@ print_stack <- function() {
 }
 
 #' Read a FAME database into an R list
+#'
+#' @param dbname_ FAME database filename
+#' @param wilnam_  object name wildcard
+#' @param fame_range_  FAME range to limit data retrieval
 #'
 #' @export
 read_fame <- function(dbname_,
@@ -294,7 +299,7 @@ read_fame <- function(dbname_,
       )
       if (rc != rhli::HSUCC) {
         cat(sprintf("fame_info %d\n", rc))
-        cat(sprintf("[%s]\n\n", okstr))
+        cat(sprintf("[%s]\n\n", objnam$value))
         return (FALSE)
       }
       
@@ -420,7 +425,7 @@ read_fame <- function(dbname_,
 
 #' create a lubridate index
 #'
-#' @param fame_range FAME range
+#' @param rng FAME range
 #'
 #' @return tibble with lubridate date column
 #' @export
@@ -458,16 +463,22 @@ to_lubridate_date <- function(fame_freq, date) {
 
 #' put data for FAME in a list
 #'
+#' @param mylist target qoma.smuggler::List for put() operation
 #' @param objectname object name
 #' @param data data value(s) to store
 #' @param desc description
 #' @param docu documentation
-#' @param otype object type attribute
-#' @param basis object basis attribute
+#' @param class object class HLI code
+#' @param range FAME range of object data (if series)
+#' @param type object type HLI code
+#' @param basis object basis HLI code
 #' @param obse object observed attribute
 #'
 #' @return success TRUE or FALSE
 #' @export
+#' 
+
+ 
 put <- function(mylist,
                 objectname,
                 data,
@@ -519,6 +530,7 @@ put <- function(mylist,
 
 #' Mutable list
 #'
+#' @importFrom methods new
 #' @export List
 List <- setRefClass(
   "List",
@@ -591,7 +603,7 @@ List <- setRefClass(
 
 #' wrte fame db
 #'
-#' @param dbname db name
+#' @param dbname_ FAME database filename
 #' @param container List with data to write
 #'
 #' @export
