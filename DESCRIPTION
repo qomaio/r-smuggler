@@ -1,10 +1,10 @@
 Package: qoma.smuggler
-Title: Transporting Data and Commands over the Fame / R Border
+Title: Transport Data and Commands over the FAME / R Border
 Version: 0.0.1
 Authors@R: c(
     person("Kevin", "Keane", email = "krkeane@qoma.io", role = c("aut", "cre")),
     person("Qoma", "LLC", email = "info@qoma.io", role = "cph"))
-Description: qoma.smuggler transports data and commands across the FAME / R border using the package rhli.
+Description: Transport data and commands across the FAME / R border.
 Depends: R (>= 3.5)
 Imports:
     rhli (>= 0.0.2), 
