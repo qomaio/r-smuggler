@@ -1,5 +1,12 @@
 # Qoma Smuggler
 
+Transport data and commands across the FAME / R border.
+    A set of utilities for: 
+* reading FAME databases into R; 
+* writing R data into FAME databases; 
+* executing FAME commands in R environment; and, 
+* executing R commands from the FAME environment.
+
 ## Prerequisites
 
 * Install R Studio and successfully render an R Markdown page.
