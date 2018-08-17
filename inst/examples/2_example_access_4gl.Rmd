@@ -43,4 +43,6 @@ cat(readLines("tmp.txt"), sep = '\n')
 When finished accessing FAME, 
 ```{r}
 close_hli()
+file.remove("tmp.txt")
+file.remove("tmp.db")
 ```
