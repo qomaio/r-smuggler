@@ -4,7 +4,10 @@ Version: 0.0.1
 Authors@R: c(
     person("Kevin", "Keane", email = "krkeane@qoma.io", role = c("aut", "cre")),
     person("Qoma", "LLC", email = "info@qoma.io", role = "cph"))
-Description: Transport data and commands across the FAME / R border.
+Description: Transport data and commands across the 'FAME' / 'R' border.
+    A set of utilities for: reading 'FAME' databases into 'R'; writing
+    'R' data into 'FAME' databases; executing 'FAME' commands in 'R' environment; and, executing
+    'R' commands from the 'FAME' environment.
 Depends: R (>= 3.5)
 Imports:
     rhli (>= 0.0.2), 
