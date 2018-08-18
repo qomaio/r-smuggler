@@ -601,7 +601,7 @@ List <- setRefClass(
 )
 
 
-#' wrte fame db
+#' write fame db
 #'
 #' @param dbname_ FAME database filename
 #' @param container List with data to write
