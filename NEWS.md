@@ -1,2 +1,2 @@
-# rhli 0.0.2
-*  refactor cfmini() and cfmfin().
+# qoma.smuggler 0.0.1
+*  Initial release.
