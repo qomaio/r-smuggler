@@ -2,6 +2,7 @@
 
 Transport data and commands across the FAME / R border.
     A set of utilities for: 
+    
 * reading FAME databases into R; 
 * writing R data into FAME databases; 
 * executing FAME commands in R environment; and, 
