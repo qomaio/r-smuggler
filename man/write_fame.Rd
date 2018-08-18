@@ -2,7 +2,7 @@
 % Please edit documentation in R/smuggler.R
 \name{write_fame}
 \alias{write_fame}
-\title{wrte fame db}
+\title{write fame db}
 \usage{
 write_fame(dbname_, container)
 }
@@ -12,5 +12,5 @@ write_fame(dbname_, container)
 \item{container}{List with data to write}
 }
 \description{
-wrte fame db
+write fame db
 }
