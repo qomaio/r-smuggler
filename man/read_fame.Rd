@@ -13,6 +13,14 @@ read_fame(dbname_, wilnam_ = "?", fame_range_ = NULL)
 
 \item{fame_range_}{FAME range to limit data retrieval}
 }
+\value{
+List containing FAME objectname, FAME objectdata pairs
+}
 \description{
 Read a FAME database into an R list
+}
+\examples{
+dbname <- file.path(Sys.getenv("FAME"),"util","driecon")
+famedb <- read_fame(dbname)
+
 }

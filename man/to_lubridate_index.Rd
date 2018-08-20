@@ -2,7 +2,7 @@
 % Please edit documentation in R/smuggler.R
 \name{to_lubridate_index}
 \alias{to_lubridate_index}
-\title{create a lubridate index}
+\title{Create a lubridate index}
 \usage{
 to_lubridate_index(rng)
 }
@@ -13,5 +13,10 @@ to_lubridate_index(rng)
 tibble with lubridate date column
 }
 \description{
-create a lubridate index
+Create a lubridate index
+}
+\examples{
+rng <- to_fame_range(rhli::HANDEC,"1993","2002")
+tbl <- to_lubridate_index(rng)
+
 }

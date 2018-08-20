@@ -19,3 +19,7 @@ date range
 \description{
 Construct a date range
 }
+\examples{
+range <- to_fame_range(rhli::HANDEC,"1993","2002")
+
+}

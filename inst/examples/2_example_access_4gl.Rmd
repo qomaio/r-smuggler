@@ -22,15 +22,17 @@ the most business days of the prior quarter.
 
 We demonstrate FAME timescale conversion and reporting.
 ```{r}
+txtfile <- file.path(tempdir(),"tmp.txt")
+dbfile <- file.path(tempdir(),"tmp.db")
 cmd <- Character(paste(
   "date thisday(q)-1; ",
   "freq b; ",
-  "open<acc over>tmp; ",
+  "open<acc over>\"",dbfile,"\" as db; ",
   "series x : precision by date; ",
   "desc(x) = \"U[0,1]\"; ",
   "docu(x) = \"Uniformly distributed U[0,1] time-series.\"; ",
   "set x = uniform(date); ",
-  "output<acc over>tmp.txt; ",
+  "output<acc over>\"",txtfile,"\"; ",
   "whats x; ",
   "show vert; length full; conv on;",
   "freq b; title text \"Frequency \"+@freq; repo x; ",
@@ -38,13 +40,13 @@ cmd <- Character(paste(
   "freq m; title text \"Frequency \"+@freq; repo x; ",
   "freq q; title text \"Frequency \"+@freq; repo x; ",
   "output terminal; ",
-  "close tmp",  sep=""))
+  "close db",  sep=""))
 cfmfame(Integer(-1), cmd)
-cat(readLines("tmp.txt"), sep = '\n')
+cat(readLines(txtfile), sep = '\n')
 ```
 When finished accessing FAME, 
 ```{r}
 close_hli()
-file.remove("tmp.txt")
-file.remove("tmp.db")
+file.remove(txtfile)
+file.remove(dbfile)
 ```

@@ -18,11 +18,6 @@ close_hli <- function() {
   return (status$value == rhli::HSUCC)
 }
 
-#' convert a fame type code to a string
-#'
-#' @param type_code_ FAME HLI type code
-#'
-#' @return type string
 type_to_string <- function(type_code_) {
   type_code <- rhli::Integer(type_code_)
   inlen <- rhli::Integer(80)
@@ -68,6 +63,12 @@ FAME_CLASS$set(rhli::HGLFOR, "GLFORMULA")
 #' @param famedata List containing FAME data to display
 #' @param list.len maximum entries to display 
 #'
+#' @examples 
+#' myStuff <- List()
+#' entry <- newEntry('String contents',class=rhli::HSCALA,type=rhli::HSTRNG)
+#' myStuff$put('str',entry)
+#' print_catalog(myStuff)
+#' 
 #' @export
 print_catalog <- function(famedata, list.len = -1) {
   if (list.len < 1) {
@@ -94,6 +95,10 @@ print_catalog <- function(famedata, list.len = -1) {
 #' @param end_str_  FAME end date literal
 #'
 #' @return date range
+#' 
+#' @examples 
+#' range <- to_fame_range(rhli::HANDEC,"1993","2002")
+#' 
 #' @export
 to_fame_range <- function(freq_, start_str_, end_str_) {
   range <- c(freq_, 0, 0)
@@ -112,24 +117,30 @@ to_fame_range <- function(freq_, start_str_, end_str_) {
 }
 
 
-#' get a meta data string for an object
+#' Get a meta data string for an object
 #'
-#' @param fameinfo a list containing fame object meta data
+#' @param fameMeta a list containing fame object meta data
 #' @param objnam object name
 #'
 #' @return string containing meta data
+#' 
+#' @examples 
+#' dbname <- file.path(Sys.getenv("FAME"),"util","driecon")
+#' famedb <- read_fame(dbname)
+#' meta <- famedb$get_meta('GDP')
+#' cat(meta_to_string(famedb$get('GDP')$meta, objnam))
 #' @export
-meta_to_string <- function(fameinfo, objnam) {
-  if (!is.null(fameinfo)) {
-    fametype <- fameinfo$type
+meta_to_string <- function(fameMeta, objnam) {
+  if (!is.null(fameMeta)) {
+    fametype <- fameMeta$type
     if (!is.null(fametype)) {
       fame_type_string <- type_to_string(fametype)
-      fameclass <- fameinfo$class
+      fameclass <- fameMeta$class
       if (fameclass == rhli::HSCALA) {
         meta <- sprintf("SCALAR %s : %s", objnam, fame_type_string)
       }
       else if (fameclass == rhli::HSERIE) {
-        rng <- fameinfo$range
+        rng <- fameMeta$range
         if (!is.null(rng)) {
           freq_code <- rng[1]
           if (freq_code == rhli::HCASEX) {
@@ -180,11 +191,11 @@ meta_to_string <- function(fameinfo, objnam) {
       }
     }
   }
-  famedesc <- fameinfo$desc
+  famedesc <- fameMeta$desc
   if (!is.null(famedesc)) {
     meta <- sprintf("%s\n%s", meta, famedesc)
   }
-  famedocu <- fameinfo$docu
+  famedocu <- fameMeta$docu
   if (!is.null(famedocu)) {
     meta <- sprintf("%s\n-\n%s\n\n", meta, famedocu)
   }
@@ -232,6 +243,12 @@ print_stack <- function() {
 #' @param dbname_ FAME database filename
 #' @param wilnam_  object name wildcard
 #' @param fame_range_  FAME range to limit data retrieval
+#' 
+#' @return List containing FAME objectname, FAME objectdata pairs
+#' 
+#' @examples 
+#' dbname <- file.path(Sys.getenv("FAME"),"util","driecon")
+#' famedb <- read_fame(dbname)
 #'
 #' @export
 read_fame <- function(dbname_,
@@ -423,11 +440,16 @@ read_fame <- function(dbname_,
   return (List(database))
 }
 
-#' create a lubridate index
+#' Create a lubridate index
 #'
 #' @param rng FAME range
 #'
 #' @return tibble with lubridate date column
+#' 
+#' @examples
+#' rng <- to_fame_range(rhli::HANDEC,"1993","2002")
+#' tbl <- to_lubridate_index(rng)
+#' 
 #' @export
 to_lubridate_index <- function(rng) {
   numobs <- rng[3] - rng[2] + 1
@@ -438,13 +460,6 @@ to_lubridate_index <- function(rng) {
   return(tibble::tibble(date = index))
 }
 
-#' create a lubridate date
-#'
-#' @param fame_freq FAME frequency code
-#' @param date FAME date
-#'
-#' @return lubridate date
-#' @export
 to_lubridate_date <- function(fame_freq, date) {
   base_date <- rhli::Integer(43830) # FAME DAILY frequency 1/1/1970
   daily_date <- rhli::Integer(-1)
@@ -461,10 +476,8 @@ to_lubridate_date <- function(fame_freq, date) {
 }
 
 
-#' put data for FAME in a list
-#'
-#' @param mylist target qoma.smuggler::List for put() operation
-#' @param objectname object name
+#' Construct a List entry with FAME data and metadata
+#' 
 #' @param data data value(s) to store
 #' @param desc description
 #' @param docu documentation
@@ -474,14 +487,14 @@ to_lubridate_date <- function(fame_freq, date) {
 #' @param basis object basis HLI code
 #' @param obse object observed attribute
 #'
-#' @return success TRUE or FALSE
+#' @return FAME database object (data and metadata as nested R list)
+#' 
+#' @examples 
+#' entry <- newEntry('String contents',class=rhli::HSCALA,type=rhli::HSTRNG)
+#'     
 #' @export
 #' 
-
- 
-put <- function(mylist,
-                objectname,
-                data,
+newEntry <- function(data,
                 desc = NULL,
                 docu = NULL,
                 class = rhli::HSERIE,
@@ -519,11 +532,7 @@ put <- function(mylist,
   entry[['data']] <- data
   entry[['meta']] <- fameinfo
   
-  famedata <- list()
-  famedata[[objectname]] <- entry
-  
-  mylist$contents <- c(mylist$contents, famedata)
-  
+  return(entry)
 }
 
 
@@ -532,19 +541,41 @@ put <- function(mylist,
 #'
 #' @importFrom methods new
 #' @export List
+#' @examples
+#' # set FAME monthly date range January 2018 to December 2018
+#' rng <- to_fame_range(rhli::HMONTH,"18m1","18m12")
+#' # convert to equivalent lubridate date column
+#' tbl <- to_lubridate_index(rng)
+#' # generate N(0,1) random observations
+#' nobs <- rng[3]-rng[2]+1
+#' tbl['x'] <- rnorm(nobs)
+#' # construct List entry containing data and FAME metadata
+#' mydb <- List()
+#' entry <- newEntry(tbl$x,
+#'     desc = "N(0,1)", 
+#'     docu = "R generated N(0,1) time series.", 
+#'     range = rng,obse = rhli::HOBSUM )
+#' # put key='x',value=entry in List
+#' mydb$put('x',entry)
+#' # display contents of List
+#' print_catalog(mydb)
+#' # retrieve value for key 'x' from List
+#' mydb$get('x')
+#' 
 List <- setRefClass(
   "List",
   fields = list(contents = "list"),
   methods = list(
     initialize = function(l0 = list()) {
-      "Initialize a list."
+      "Initialize a List."
       contents <<- as.list(l0)
     },
     put = function(key,value){
+      "Put a key,value pair into the List"
       contents[[key]] <<- value
     },
     get = function(objnam = NULL) {
-      "Get an element of the list"
+      "Get an element of the List"
       if (is.null(objnam)) {
         return(NULL)
       }
@@ -601,10 +632,18 @@ List <- setRefClass(
 )
 
 
-#' write fame db
+#' Write FAME db
 #'
 #' @param dbname_ FAME database filename
 #' @param container List with data to write
+#' 
+#' @examples 
+#' mydb <- List()
+#' # construct an entry for FAME scalar string
+#' entry <- newEntry('String contents',class=rhli::HSCALA,type=rhli::HSTRNG)
+#' mydb$put('str',entry)
+#' dbfile <- file.path(tempdir(),'tmp.db')
+#' write_fame(dbfile,mydb)
 #'
 #' @export
 write_fame <- function(dbname_, container) {

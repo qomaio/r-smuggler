@@ -2,7 +2,7 @@
 % Please edit documentation in R/smuggler.R
 \name{write_fame}
 \alias{write_fame}
-\title{write fame db}
+\title{Write FAME db}
 \usage{
 write_fame(dbname_, container)
 }
@@ -12,5 +12,14 @@ write_fame(dbname_, container)
 \item{container}{List with data to write}
 }
 \description{
-write fame db
+Write FAME db
+}
+\examples{
+mydb <- List()
+# construct an entry for FAME scalar string
+entry <- newEntry('String contents',class=rhli::HSCALA,type=rhli::HSTRNG)
+mydb$put('str',entry)
+dbfile <- file.path(tempdir(),'tmp.db')
+write_fame(dbfile,mydb)
+
 }

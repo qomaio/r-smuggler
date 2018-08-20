@@ -2,12 +2,12 @@
 % Please edit documentation in R/smuggler.R
 \name{meta_to_string}
 \alias{meta_to_string}
-\title{get a meta data string for an object}
+\title{Get a meta data string for an object}
 \usage{
-meta_to_string(fameinfo, objnam)
+meta_to_string(fameMeta, objnam)
 }
 \arguments{
-\item{fameinfo}{a list containing fame object meta data}
+\item{fameMeta}{a list containing fame object meta data}
 
 \item{objnam}{object name}
 }
@@ -15,5 +15,11 @@ meta_to_string(fameinfo, objnam)
 string containing meta data
 }
 \description{
-get a meta data string for an object
+Get a meta data string for an object
+}
+\examples{
+dbname <- file.path(Sys.getenv("FAME"),"util","driecon")
+famedb <- read_fame(dbname)
+meta <- famedb$get_meta('GDP')
+cat(meta_to_string(famedb$get('GDP')$meta, objnam))
 }

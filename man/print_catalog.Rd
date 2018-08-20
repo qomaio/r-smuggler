@@ -14,3 +14,10 @@ print_catalog(famedata, list.len = -1)
 \description{
 Print a catalog
 }
+\examples{
+myStuff <- List()
+entry <- newEntry('String contents',class=rhli::HSCALA,type=rhli::HSTRNG)
+myStuff$put('str',entry)
+print_catalog(myStuff)
+
+}

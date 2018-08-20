@@ -39,39 +39,40 @@ See what it looks like with the `print_catalog()`
 function.
 ```{r}
 mydb <- List() # mutable list
-put(
-  mydb,
-  'x',
+entry <- newEntry( # entry with data and FAME metadata
   tbl$x,
   desc = "N(0,1)",
   docu = "R generated N(0,1) time series.",
   range = rng,
   obse = rhli::HOBSUM
   )
-  print_catalog(mydb)
+mydb$put('x',entry)
+print_catalog(mydb)
 mydb$get('x')
 ```
 Write the contents of the _qoma.smuggler_ `List` to a FAME database.
 ```{r}
-write_fame("mydb",mydb)
+dbfile <- file.path(tempdir(),"tmp.db")
+write_fame(dbfile,mydb)
 ```
 Use 4GL to peek at data in FAME.
 ```{r}
+txtfile <- file.path(tempdir(),"tmp.txt")
 cmd <- rhli::Character(paste(
-  "open<acc read>mydb;",  
-  "output<acc over>tmp.txt;",
-  "cata mydb;",  
+  "open<acc read>\"",dbfile,"\" as db;",  
+  "output<acc over>\"",txtfile,"\";",
+  "cata db;",  
   "whats x;",  
   "disp x;",  
   "output terminal;",
-  "close mydb;",
+  "close db;",
   sep=""))
 rhli::cfmfame(rhli::Integer(-1), cmd)
-cat(readLines("tmp.txt"), sep = '\n')
+cat(readLines(txtfile), sep = '\n')
 ```
 ```{r}
 close_hli()
 
-file.remove("mydb.db")
-file.remove("tmp.txt")
+file.remove(dbfile)
+file.remove(txtfile)
 ```

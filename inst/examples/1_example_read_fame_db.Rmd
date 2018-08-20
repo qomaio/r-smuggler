@@ -30,7 +30,7 @@ if(!open_hli())knitr::knit_exit()
 
 The FAME distribution includes a number of sample databases.  We will use the DRI Economics _driecon_ sample database for this notebook.
 ```{r}
-dbname <- paste(Sys.getenv("FAME"),"util","driecon",sep="/")
+dbname <- file.path(Sys.getenv("FAME"),"util","driecon")
 cat(dbname)
 ```
 

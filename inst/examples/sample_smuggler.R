@@ -9,23 +9,25 @@ famedata <- read_fame(dbname)
 
 cat(famedata$get_meta('GDP'))
 
-write_fame("mydb",famedata)
+txtfile <- file.path(tempdir(),"tmp.txt")
+dbfile <- file.path(tempdir(),"tmp.db")
+write_fame(dbfile,famedata)
 
 status <- Integer(-1)
 cmd <- Character(paste(
-  "open<acc read> mydb; ",
-  "output<acc over> tmp.txt; ",
+  "open<acc read>\"",dbfile,"\" as db; ",
+  "output<acc over>\"",txtfile,"\"; ",
   "whats gdp;",
   "output terminal; ",
-  "close mydb; ",  
+  "close db; ",  
   sep=""))
 cfmfame(status, cmd)
-cat(readLines("tmp.txt"), sep = '\n')
+cat(readLines(txtfile), sep = '\n')
 
 close_hli()
 
-file.remove("mydb.db")
-file.remove("tmp.txt")
+file.remove(dbfile)
+file.remove(txtfile)
 
 unloadNamespace('qoma.smuggler')
 unloadNamespace('rhli')

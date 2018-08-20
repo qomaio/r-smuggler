@@ -29,28 +29,30 @@ famedata <- read_fame(dbname)
 ```
 
 ```{r}
-write_fame("mycopy",famedata)
+dbfile <- file.path(tempdir(),"tmp.db")
+write_fame(dbfile,famedata)
 ```
 
 Use 4GL to peek at data in FAME. Output here is a bit verbose.  Note that after FAME catalogs the database,
 we loop through the objects and write the object documentation.
 ```{r}
+txtfile <- file.path(tempdir(),"tmp.txt")
 cmd <- rhli::Character(paste(
-  "open<acc read>mycopy;",  
-  "output<acc over>tmp.txt;",
-  "cata mycopy;", 
-  "-/xl = wildlist(mycopy,\"?\");",
+  "open<acc read>\"",dbfile,"\" as db;",  
+  "output<acc over>\"", txtfile, "\";",
+  "cata db;", 
+  "-/xl = wildlist(db,\"?\");",
   "loop for x in xl; type name(x); type docu(x)+newline;end;",
   "output terminal;",
-  "close mycopy;",
+  "close db;",
   sep=""))
 rhli::cfmfame(rhli::Integer(-1), cmd)
-cat(readLines("tmp.txt"), sep = '\n')
+cat(readLines(txtfile), sep = '\n')
 ```
 
 
 ```{r}
 close_hli()
-file.remove("tmp.txt")
-file.remove("mycopy.db")
+file.remove(txtfile)
+file.remove(dbfile)
 ```

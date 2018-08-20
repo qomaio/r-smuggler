@@ -45,13 +45,14 @@ ggplot(data = tbl, aes(x = date, y = GDP))+
   geom_line(color = "#00AFBB", size = 2)
 ```
 
-To move R data across the border to FAME,
+To move R data back across the border to FAME,
 ```{r}
-write_fame("mycopy.db",famedata)
+mydb <- file.path(tempdir(),"mycopy.db")
+write_fame(mydb,famedata)
 ```
 
 When you complete your work, close the FAME HLI to avoid data loss,
 ```{r}
 close_hli()
-file.remove("mycopy.db")
+file.remove(mydb)
 ```
