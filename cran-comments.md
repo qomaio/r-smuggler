@@ -1,4 +1,22 @@
 # CRAN comments for qoma.smuggler
+
+## Resubmission 2
+CRAN team -
+
+This is a second resubmission of a new package, responding to feedback from Swetlana Herbrandt on resubmission 1 below.
+
+* please add a blank between 'FAME' and the URL <...>:
+'FAME' <https://fame.sungard.com/support.html>
+    * done.
+
+Thank you for reviewing my submission!
+
+Regards,
+
+Kevin
+
+---
+
 ## Resubmission 1
 CRAN team -
 
