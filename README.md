@@ -12,20 +12,17 @@ Transport data and commands across the FAME / R border.
 
 * Install R Studio and successfully render an R Markdown page.
 * Install FAME and successfully enter and exit the FAME 4GL environment.
-* `install.packages("devtools")`
-    * this is temporary to facilitate `install_github()` below
-    * we are submitting this package to CRAN
-    * when this package is on CRAN `devtools` will not be required for installation
     
 ## Installation and testing
 
 From an R console,
 
-* `devtools::install_github("qomaio/r-smuggler")`
+* `install.packages('qoma.smuggler')`
 * `source(file.path(find.package("qoma.smuggler"),"examples/sample_smuggler.R"))`
 
 From an R console inside R Studio,
 
+* `install.packages('ggplot2')`
 * `file.edit(file.path(find.package("qoma.smuggler"),"examples/0_example_hello_utils.Rmd"))`
 * `file.edit(file.path(find.package("qoma.smuggler"),"examples/1_example_read_fame_db.Rmd"))`
 * `file.edit(file.path(find.package("qoma.smuggler"),"examples/2_example_access_4gl.Rmd"))`
