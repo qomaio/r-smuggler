@@ -1,6 +1,6 @@
 Package: qoma.smuggler
 Title: Transport Data and Commands Across the 'FAME' / 'R' Border
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: c(
     person("Kevin", "Keane", email = "krkeane@qoma.io", role = c("aut", "cre")),
     person("Qoma", "LLC", email = "info@qoma.io", role = "cph"))
