@@ -18,7 +18,7 @@ library(rhli)
 if(!open_hli())knitr::knit_exit()
 ```
 We use FAME 4GL to generate uniform random numbers for a specified date range --- 
-the most business days of the prior quarter. 
+the business days of the prior quarter. 
 
 We demonstrate FAME timescale conversion and reporting.
 ```{r}
